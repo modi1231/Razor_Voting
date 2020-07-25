@@ -1,0 +1,48 @@
+﻿@page
+@model Razor_Voting.Pages.adminModel
+@{
+    ViewData["Title"] = "admin";
+}
+<h1>Admin</h1>
+<style type="text/css">
+    .myTextArea {
+        width: 300px;
+        height:100px;
+    }
+    .mydiv
+    {
+        margin-bottom:10px;
+    }
+    .mywarning
+    {
+        font-size:smaller;
+        font-style:italic;
+    }
+</style>
+
+<h4>Add new question</h4>
+<form method="post">
+    <div class="mydiv">
+        <label asp-for="@Model.Question"></label>
+        <br />
+        <textarea class="myTextArea" asp-for="@Model.Question"></textarea>
+    </div>
+    <div class="mydiv">
+        <label asp-for="@Model.ExpirationDate"></label><br />
+
+        @Html.EditorFor(m => Model.ExpirationDate)
+
+    </div>
+    <div class="mydiv">
+        <label asp-for="@Model.Choices"></label><br />
+        <span class="mywarning">Each line designates a new choice.</span><br />
+        <textarea class="myTextArea" asp-for="@Model.Choices"></textarea>
+    </div>
+    <div class="mydiv">
+        <input type="submit" value="Submit" />
+    </div>
+
+</form>
+
+<br />
+<a href="index">index</a>

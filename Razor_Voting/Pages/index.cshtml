@@ -1,0 +1,99 @@
+﻿@page
+@model Razor_Voting.Pages.indexModel
+@{
+    ViewData["Title"] = "index";
+}
+
+<style type="text/css">
+    .question_box {
+        border: 2px solid black;
+        margin: 10px;
+        padding: 5px;
+        width: 300px;
+    }
+
+    .expiration {
+        font-size: small;
+    }
+
+    .question {
+        font-size: large;
+        font-weight: bolder;
+    }
+
+    .responded {
+        font-size: small;
+        background-color: #eeeeee;
+        padding: 5px;
+    }
+</style>
+
+<h1>index</h1>
+<h3>@Model.Message</h3>
+
+@foreach (Data.POLL item in Model.myPoll)
+{
+    @*<div style="border:2px solid black;margin:10px;padding:5px;">*@
+    <div class="question_box">
+        @if (item.BEEN_ANSWERED)
+        {
+            <div>
+                <div>
+                    <div class="question">
+                        @*<label asp-for="@item.POLL_QUESTION"></label>:*@
+                        @item.POLL_QUESTION
+                    </div>
+                    <div class="expiration"><i> Expiration Date: @item.EXPIRATION_DATE</i></div>
+                    <br />
+                    @foreach (Razor_Voting.Data.CHOICE item_choice in item.CHOICES)
+                    {
+                        <span>
+                            @item_choice.CHOICE_TEXT : @item_choice.PERCENTAGE % (@item_choice.COUNT)
+                            @if (item_choice.USER_PICKED)
+                            {<span style="font-weight:bold;">*</span>}
+                            <br />
+                        </span>
+                    }
+                </div>
+                <p class="responded">You have responded on <i>@item.DATE_ENTERED</i>.</p>
+            </div>
+        }
+        else
+        {
+            <div>
+                <form method="post">
+                    @*<p>@item.POLL_ID </p>*@
+                    <div class="question">@item.POLL_QUESTION</div>
+                    <div class="expiration"><i> Expiration Date: @item.EXPIRATION_DATE</i></div>
+                    <p><u>Choices:</u></p>
+                    @foreach (Razor_Voting.Data.CHOICE item_choice in item.CHOICES)
+                    {
+                        @*<p><b>@item.Key</b> : @item.Value</p>*@
+                        <span>
+                            <input type="radio" asp-for="choiceSelected" value="@item_choice.CHOICE_ID" />
+                            <label>@item_choice.CHOICE_TEXT</label>
+                            <br />
+                        </span>
+                    }
+                    <div>
+                        <input type="submit" asp-route-pollID="@item.POLL_ID" value="Submit Vote" style="margin-top:5px;" />
+                    </div>
+                </form>
+            </div>
+            <br />
+        }
+
+    </div>
+}
+
+
+<br />
+<div style="border:5px solid black;">
+    <a href="admin">admin</a>
+</div>
+
+@*declare @ColumnName Nvarchar(max) =
+        (SELECT 'select ' + STUFF((SELECT ',' + 'Text'+CONVERT(varchar(20),ReportHeaderIndex) + ' '+ '['+ReportHeader +']'
+    FROM ReportHeaders where ReportID=@ReportID order by ReportHeaderIndex
+    FOR XML PATH('')) ,1,1,'') + ' , convert(nvarchar(20),[ReportDate]) ReportDate From ReportDetails R where ReportDate >= ''' +@ReportDateFrom+''' and ReportDate <= '''+ @ReportDateTo +''' and R.ReportID =' + @ReportID + ' and '+@SearchString+' and IsHistory=0 order by reportdate desc ' + @SortingColumns AS Txt )
+    exec (@ColumnName)*@
